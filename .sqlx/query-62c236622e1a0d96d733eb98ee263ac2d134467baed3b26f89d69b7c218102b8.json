@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO weight (id, value, member_id, create_time, update_time) VALUES (?, ?, ?, datetime(), datetime()) RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "62c236622e1a0d96d733eb98ee263ac2d134467baed3b26f89d69b7c218102b8"
+}
