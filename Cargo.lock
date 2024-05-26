@@ -628,16 +628,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hello-rocket"
-version = "0.1.0"
-dependencies = [
- "rocket",
- "rocket_db_pools",
- "rocket_sync_db_pools",
- "sqlx",
-]
-
-[[package]]
 name = "hermit-abi"
 version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1466,6 +1456,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rocket_with_sqlite"
+version = "0.1.0"
+dependencies = [
+ "rocket",
+ "rocket_db_pools",
+ "rocket_sync_db_pools",
+ "sqlx",
+ "uuid",
+]
+
+[[package]]
 name = "rsa"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1795,6 +1796,7 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "url",
+ "uuid",
  "webpki-roots",
 ]
 
@@ -1828,6 +1830,8 @@ dependencies = [
  "serde_json",
  "sha2",
  "sqlx-core",
+ "sqlx-mysql",
+ "sqlx-postgres",
  "sqlx-sqlite",
  "syn 1.0.109",
  "tempfile",
@@ -1866,6 +1870,7 @@ dependencies = [
  "percent-encoding",
  "rand",
  "rsa",
+ "serde",
  "sha1",
  "sha2",
  "smallvec",
@@ -1873,6 +1878,7 @@ dependencies = [
  "stringprep",
  "thiserror",
  "tracing",
+ "uuid",
  "whoami",
 ]
 
@@ -1912,6 +1918,7 @@ dependencies = [
  "stringprep",
  "thiserror",
  "tracing",
+ "uuid",
  "whoami",
 ]
 
@@ -1935,6 +1942,7 @@ dependencies = [
  "sqlx-core",
  "tracing",
  "url",
+ "uuid",
 ]
 
 [[package]]
@@ -2332,6 +2340,18 @@ checksum = "a183cf7feeba97b4dd1c0d46788634f6221d87fa961b305bed08c851829efcc0"
 dependencies = [
  "getrandom",
  "rand",
+ "uuid-macro-internal",
+]
+
+[[package]]
+name = "uuid-macro-internal"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9881bea7cbe687e36c9ab3b778c36cd0487402e270304e8b1296d5085303c1a2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.65",
 ]
 
 [[package]]

@@ -17,19 +17,10 @@ type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T
 struct Post {
     #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
     id: Option<String>,
-    member_id: String,
-    value: f64,
-}
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
-struct List {
-    #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
-    id: Option<String>,
-    value: Option<f64>,
-    member_id: Option<String>,
-    create_time: Option<i64>,
-    update_time: Option<i64>,
+    name: Option<String>,
+    nickname: Option<String>,
+    sex: Option<i64>,
+    relationship: Option<i64>,
 }
 
 #[post("/", data = "<post>")]
@@ -39,11 +30,14 @@ async fn create(
 ) -> Result<Created<Json<Post>>> {
     let uid = Uuid::new_v4();
     let id = uid.to_string();
+    print!("{}", id);
     let results = sqlx::query!(
-        "INSERT INTO weight (id, value, member_id, create_time, update_time) VALUES (?, ?, ?, unixepoch(), unixepoch()) RETURNING id",
+        "INSERT INTO member (id, name, nickname, sex, relationship) VALUES (?, ?, ?, ?, ?) RETURNING id",
         id,
-        post.value,
-        post.member_id
+        post.name,
+        post.nickname,
+        post.sex,
+        post.relationship
     )
     .fetch(&mut **db)
     .try_collect::<Vec<_>>()
@@ -53,21 +47,21 @@ async fn create(
     Ok(Created::new("/").body(post))
 }
 
-#[get("/?<member_id>")]
-async fn list(mut db: Connection<BodyControl>, member_id: String) -> Result<Json<Vec<List>>> {
-    let results = sqlx::query!("SELECT * FROM weight where member_id = ?", member_id)
+#[get("/")]
+async fn list(mut db: Connection<BodyControl>) -> Result<Json<Vec<Post>>> {
+    let results = sqlx::query!("SELECT * FROM member")
         .fetch_all(&mut **db)
         .await?;
 
     Ok(Json(
         results
             .into_iter()
-            .map(|record| List {
+            .map(|record| Post {
                 id: record.id,
-                value: record.value,
-                member_id: record.member_id,
-                create_time: record.create_time,
-                update_time: record.update_time,
+                name: record.name,
+                nickname: record.nickname,
+                sex: record.sex,
+                relationship: record.relationship,
             })
             .collect(),
     ))
@@ -75,12 +69,12 @@ async fn list(mut db: Connection<BodyControl>, member_id: String) -> Result<Json
 
 #[delete("/<id>")]
 async fn delete(mut db: Connection<BodyControl>, id: String) -> Result<String> {
-    let result = sqlx::query!("DELETE FROM weight WHERE id = ?", id)
+    let result = sqlx::query!("DELETE FROM member WHERE id = ?", id)
         .execute(&mut **db)
-        .await?;
+        .await;
 
     print!("{:?}", result);
-    Ok("Deleted Success!".to_string())
+    Ok("success".to_string())
 }
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
@@ -101,6 +95,6 @@ pub fn stage() -> AdHoc {
         rocket
             .attach(BodyControl::init())
             .attach(AdHoc::try_on_ignite("SQLx migrate", run_migrations))
-            .mount("/weight", routes![create, list, delete])
+            .mount("/member", routes![create, list, delete])
     })
 }

@@ -5,6 +5,7 @@ use rocket::Request;
 #[macro_use]
 extern crate rocket;
 
+mod member;
 mod weight;
 
 #[catch(default)]
@@ -38,6 +39,7 @@ fn rocket() -> _ {
         .mount("/", routes![index])
         .mount("/hello", routes![world])
         .mount("/delay", routes![delay])
+        .attach(member::stage())
         .attach(weight::stage())
         .register("/", catchers![default_catcher])
 }

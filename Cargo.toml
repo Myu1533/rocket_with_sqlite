@@ -1,5 +1,5 @@
 [package]
-name = "hello-rocket"
+name = "rocket_with_sqlite"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,10 +8,18 @@ edition = "2021"
 [dependencies]
 rocket={version="0.5.0", features=["json"]}
 
+[dependencies.uuid]
+version="1.8.0"
+features=[
+  "v4",
+  "fast-rng",
+  "macro-diagnostics",
+]
+
 [dependencies.sqlx]
 version="0.7.0"
 default-features=false
-features=["macros", "migrate"]
+features=["macros", "migrate", "uuid"]
 
 [dependencies.rocket_db_pools]
 version="0.1.0"
